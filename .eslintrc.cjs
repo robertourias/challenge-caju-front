@@ -17,6 +17,12 @@ module.exports = {
         paths: ['src'],
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
       },
+      alias: {
+        map: [
+          ['~', './src'], // Define a resolução de caminho do til para a pasta src 
+        ],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'], // Adiciona as extensões de arquivo suportadas
+      },
     },
   },
   rules: {
