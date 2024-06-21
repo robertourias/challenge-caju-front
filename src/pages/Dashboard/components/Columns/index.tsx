@@ -2,7 +2,7 @@
 import * as S from "./styles";
 import RegistrationCard from "../RegistrationCard";
 import { StatusEnum } from "~/types/Status";
-import { RegistrationInterface } from "~/types/RegistrationInterface";
+import { RegistrationType } from "~/types/Registration";
 
 const allColumns = [
   { status: StatusEnum.REVIEW, title: "Pronto para revisar" },
@@ -11,7 +11,7 @@ const allColumns = [
 ];
 
 type Props = {
-  registrations?: RegistrationInterface[];
+  registrations?: RegistrationType[];
 };
 const Collumns = (props: Props) => {
   return (

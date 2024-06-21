@@ -1,9 +1,9 @@
 import Collumns from "./components/Columns";
 import * as S from "./styles";
 import { SearchBar } from "./components/Searchbar";
-import { RegistrationInterface } from "~/types/RegistrationInterface";
+import { RegistrationType } from "~/types/Registration";
 
-const registrations: RegistrationInterface[] = [
+const registrations: RegistrationType[] = [
   {
     "admissionDate": "22/10/2023",
     "email": "luiz@caju.com.br",
