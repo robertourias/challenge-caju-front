@@ -8,6 +8,10 @@ module.exports = {
     'eslint-config-prettier',
     "plugin:react-hooks/recommended"
   ],
+  parserOptions: {
+    ecmaVersion: "latest",
+    sourceType: "module",
+  },
   settings: {
     react: {
       version: 'detect',
@@ -25,6 +29,7 @@ module.exports = {
       },
     },
   },
+  ignorePatterns: ["node_modules/"],
   rules: {
     "@typescript-eslint/no-explicit-any": "off",
     "react/react-in-jsx-scope": "off",
