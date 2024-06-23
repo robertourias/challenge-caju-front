@@ -4,7 +4,7 @@
       "admissionDate": "22/10/2023",
       "email": "luiz@caju.com.br",
       "employeeName": "Luiz Filho",
-      "status": "APROVED",
+      "status": "APPROVED",
       "cpf": "56642105087",
       "id": "3"
     },
@@ -28,7 +28,7 @@
       "admissionDate": "20/06/2024",
       "email": "roberto.urias@caju.com.br",
       "employeeName": "Roberto Nicoletti",
-      "status": "APROVED",
+      "status": "APPROVED",
       "cpf": "35704637884",
       "id": "e27a"
     }

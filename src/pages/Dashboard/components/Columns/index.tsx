@@ -1,8 +1,8 @@
 
 import * as S from "./styles";
 import RegistrationCard from "../RegistrationCard";
-import { StatusEnum } from "~/types/Status";
-import { RegistrationType } from "~/types/Registration";
+import { StatusEnum } from "~/@types/Status";
+import { RegistrationType } from "~/@types/Registration";
 
 const allColumns = [
   { status: StatusEnum.REVIEW, title: "Pronto para revisar" },
@@ -10,13 +10,14 @@ const allColumns = [
   { status: StatusEnum.REPROVED, title: "Reprovado" },
 ];
 
-type Props = {
+type RegistrationProps = {
   registrations?: RegistrationType[];
 };
-const Collumns = (props: Props) => {
+const Collumns = ({registrations}: RegistrationProps) => {
   return (
     <S.Container>
       {allColumns.map((collum) => {
+        const registrosPerStatus = registrations?.filter(registration => registration.status === collum.status);
         return (
           <S.Column status={collum.status} key={collum.title}>
             <>
@@ -24,7 +25,7 @@ const Collumns = (props: Props) => {
                 {collum.title}
               </S.TitleColumn>
               <S.CollumContent>
-                {props?.registrations?.map((registration) => {
+                {registrosPerStatus?.map((registration) => {
                   return (
                     <RegistrationCard
                       data={registration}
