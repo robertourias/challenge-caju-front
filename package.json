@@ -16,17 +16,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
-    "@mui/system": "^5.15.20",
+    "formik": "^2.4.6",
     "json-server": "^1.0.0-beta.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.2.1",
+    "react-input-mask": "^2.0.4",
     "react-router-dom": "5.1.2",
-    "styled-components": "^6.1.11"
+    "styled-components": "^6.1.11",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
-    "@mui/material": "^5.15.20",
     "@nabla/vite-plugin-eslint": "^2.0.4",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "13.0.0",
@@ -40,6 +40,7 @@
     "@vitejs/plugin-react": "^4.3.1",
     "axios": "^1.7.2",
     "cypress": "^13.12.0",
+    "date-fns": "^3.6.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-alias": "^1.1.2",
@@ -55,7 +56,6 @@
     "ts-jest": "29.1.2",
     "ts-node": "10.9.2",
     "typescript": "^5.2.2",
-    "vite": "^5.2.0",
-    "zod": "^3.23.8"
+    "vite": "^5.2.0"
   }
 }

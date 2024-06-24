@@ -1,18 +1,19 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 import { useRegistrationContext } from "~/RegistrationContext";
-import { ButtonSmall, Dialog, Notification } from "~/components";
+import { ButtonSmall, Dialog } from "~/components";
 import {
   HiOutlineMail,
   HiOutlineUser,
   HiOutlineCalendar,
   HiOutlineTrash,
 } from "react-icons/hi";
+
+import { useModal, useStatus } from "~/hooks";
 import { StatusEnum } from "~/types/Status";
 import { RegistrationType } from "~/types/Registration";
 
 import * as S from "./styles";
-import { Link } from "react-router-dom";
 
 type RegistrationCardProps = {
   data: RegistrationType;
@@ -21,21 +22,17 @@ type RegistrationCardProps = {
 
 const RegistrationCard = ({ data, collumStatus }: RegistrationCardProps) => {
   const { updateRegistrationStatus, deleteRegistration } = useRegistrationContext();
-  const [dialogText, setDialogText] = useState<string>("");
-  const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
+  const { isOpenModal, modalText, handleToggleModal, handleModalText } = useModal();  
+  const { status, handlerStatusChange } = useStatus(collumStatus);
+  
   const idRegistration = useRef(data.id);
-  const statusRegistration = useRef(StatusEnum.REVIEW);
   const operation = useRef("update");
  
   function handleUpdate(text: string, status: StatusEnum) {
-    setDialogText(text);
-    setIsOpenDialog(true);
-    statusRegistration.current = status;
+    handleModalText(text);
+    handleToggleModal()
+    handlerStatusChange(status)
     operation.current = "update";
-  }
-
-  function closeDialog() {
-    setIsOpenDialog(false)
   }
 
   async function handleConfirmDialog() {
@@ -43,21 +40,21 @@ const RegistrationCard = ({ data, collumStatus }: RegistrationCardProps) => {
       if(operation.current === "delete") {
         await deleteRegistration(idRegistration.current);
       } else {
-        await updateRegistrationStatus(idRegistration.current, data, statusRegistration.current);
+        await updateRegistrationStatus(idRegistration.current, data, status);
       }
-      closeDialog();
+      handleToggleModal()
     }
   }
 
   function handleDelete() {
-    setDialogText("Tem certeza que deseja excluir este candidato?");
-    setIsOpenDialog(true);
+    handleModalText("Tem certeza que deseja excluir este candidato?");
+    handleToggleModal()
     operation.current = "delete";
   }
 
   return (
     <>
-      <Dialog isOpen={isOpenDialog} onClose={closeDialog} onConfirm={handleConfirmDialog} text={dialogText} />
+      <Dialog isOpen={isOpenModal} onClose={handleToggleModal} onConfirm={handleConfirmDialog} text={modalText} />
       <S.Card>
         <S.IconAndText>
           <HiOutlineUser />

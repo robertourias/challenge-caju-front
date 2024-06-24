@@ -12,6 +12,10 @@ export const useNotification = () => {
     setMessage(message);
     setIsError(isError);
     setIsOpen(true);
+
+    setTimeout(() => {
+      handleCloseNotification();
+    }, 1600);
   };
 
   const handleCloseNotification = () => {

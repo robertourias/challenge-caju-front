@@ -1,16 +1,19 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-import { Notification } from "./components";
-
 import { RegistrationType } from "./types/Registration";
 import { StatusEnum } from "./types/Status";
+import { Notification } from "./components";
+import { useNotification } from "./hooks";
+
 import { api, formatDate } from "./utils";
 
 interface RegistrationContextType {
   registrations: RegistrationType[];
   isLoading: boolean;
-  error: Error | null;
+  error?: Error | null;
   addRegistration: (newRegistration: RegistrationType) => Promise<void>;
+  fetchData: () => Promise<void>;
+  registrationsCPF: (cpf: string) => Promise<void>;
   updateRegistrationStatus: (
     id: string,
     data: RegistrationType,
@@ -36,22 +39,43 @@ export const useRegistrationContext = () => {
 const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
   const [registrations, setRegistrations] = useState<RegistrationType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(Error || null);
-  const [notification, setNotification] = useState({
-    isOpen: false,
-    message: "",
-    isError: false,
-  });
-
+  const { 
+    isOpen,
+    message,
+    isError,
+    handleOpenNotification,
+    handleCloseNotification 
+  } = useNotification();
+ 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);        
-      try {
-        const response = await api.get("/registrations");
-        setRegistrations(response.data);        
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setIsLoading(true);        
+    try {
+      const response = await api.get("/registrations");
+      setRegistrations(response.data);        
+    } catch (err) {
+      if(err instanceof Error) {
+        handleOpenNotification(`Error fetching registration ${err}`, true);          
+      }
+    } finally {
+      setTimeout(() => {
+        console.log("Simulando demora no carregamento...");      
+        setIsLoading(false);        
+      }, 2000);
+    }
+  };
+
+  const registrationsCPF = async (cpf: string) => {
+    setIsLoading(true);
+    try {      
+      const response = await api.get(`/registrations?cpf=${cpf}`);
+      setRegistrations(response.data);        
       } catch (err) {
         if(err instanceof Error) {
-          setError(err);
+          handleOpenNotification(`Error fetching registration ${err}`, true);          
         }
       } finally {
         setTimeout(() => {
@@ -59,9 +83,7 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
           setIsLoading(false);        
         }, 2000);
       }
-    };
-    fetchData();
-  }, []);
+  };
 
   const addRegistration = async (newRegistration: RegistrationType) => {
     const parsedRegistration = {
@@ -76,11 +98,10 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
         ...registrations,
         { ...response.data, admissionDate: formatDate(response.data.admissionDate) },
       ]);    
-      handleNotification("Registro adicionado com sucesso!", false);
+      handleOpenNotification(`Registro adicionado com sucesso!`, false);
     } catch (err) {
       if(err instanceof Error) {
-        setError(err);
-        handleNotification(`Erro ao atualizar registro! ${err}`, true);
+        handleOpenNotification(`Error fetching registration ${err}`, true);
       }
     } finally {
       setTimeout(() => {
@@ -89,32 +110,7 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
       }, 800);     
     }
   };
-
-  const handleNotification = (message: string, isError: boolean) => {
-    console.log({
-      ...notification,
-      isOpen: true,
-      message,
-      isError
-    })
-    setNotification(() => {
-      return {
-        ...notification,
-        isOpen: true,
-        message,
-        isError
-      }
-    })
-
-    setTimeout(() => {
-      closeNotification();
-    }, 1600);
-  }
-
-  const closeNotification = () => {
-    setNotification({...notification,isOpen: false});
-  }
-
+ 
   const updateRegistrationStatus = async (
     id: string,
     registration: RegistrationType,
@@ -129,12 +125,11 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
             ? { ...item, status }
             : item
         )
-      );
-      handleNotification("Status atualizado com sucesso!", false);
+      );      
+      handleOpenNotification(`Status atualizado com sucesso!`, false);
     } catch (err) {
-      if(err instanceof Error) {
-        setError(err);
-        handleNotification(`Erro ao atualizar registro! ${err}`, true);
+      if(err instanceof Error) {        
+        handleOpenNotification(`Error fetching registration ${err}`, true);
       }
     } finally {
       setTimeout(() => {
@@ -150,13 +145,12 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
       await api.delete(`/registrations/${id}`);
       setRegistrations((prevRegistrations) =>
         prevRegistrations.filter((registration) => registration.id !== id)
-      );
-      handleNotification("Registro excluído com sucesso!", false);
+      );      
+      handleOpenNotification(`Registro excluído com sucesso!`, false);
       
     } catch (err) {
       if(err instanceof Error) {
-        setError(err);
-        handleNotification(`Erro ao atualizar registro! ${err}`, true);
+        handleOpenNotification(`Error fetching registration ${err}`, true);
       }
     } finally {
       setTimeout(() => {
@@ -169,7 +163,8 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
   const contextValue: RegistrationContextType = {
     registrations,
     isLoading,
-    error,
+    fetchData,
+    registrationsCPF,
     addRegistration,
     updateRegistrationStatus,
     deleteRegistration,
@@ -178,7 +173,7 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <RegistrationContext.Provider value={contextValue}>
       {children}
-      <Notification isOpen={notification.isOpen} isError={notification.isError} message={notification.message} onClose={closeNotification} />
+      <Notification isOpen={isOpen} isError={isError} message={message} onClose={handleCloseNotification} />
     </RegistrationContext.Provider>
   );
 };

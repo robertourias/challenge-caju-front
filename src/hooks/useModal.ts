@@ -1,11 +1,16 @@
 import { useState } from "react";
 
 export const useModal = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenModal, setIsOpen] = useState(false);
+  const [modalText, setModalText] = useState("");
 
   const handleToggleModal = () => {
-    setIsOpen(!isOpen);
+    setIsOpen(!isOpenModal);
+  };
+  
+  const handleModalText = (text: string) => {
+    setModalText(text);
   };
 
-  return { isOpen, handleToggleModal };
+  return { isOpenModal, modalText, handleToggleModal, handleModalText };
 };
