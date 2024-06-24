@@ -1,4 +1,4 @@
-import { ButtonSmall } from "~/components/Buttons";
+import { ButtonSmall, Dialog } from "~/components";
 import * as S from "./styles";
 import {
   HiOutlineMail,
@@ -8,45 +8,84 @@ import {
 } from "react-icons/hi";
 import { StatusEnum } from "~/types/Status";
 import { useRegistrationContext } from "~/RegistrationContext";
+import { useRef, useState } from "react";
+import { RegistrationType } from "~/types/Registration";
 
 type RegistrationCardProps = {
-  data: any;
+  data: RegistrationType;
   collumStatus: StatusEnum
 };
 
 const RegistrationCard = ({ data, collumStatus }: RegistrationCardProps) => {
-  const { registrations } = useRegistrationContext();
+  const { updateRegistrationStatus, deleteRegistration } = useRegistrationContext();
+  const [dialogText, setDialogText] = useState<string>("");
+  const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
+  const idRegistration = useRef(data.id);
+  const statusRegistration = useRef(StatusEnum.REVIEW);
+  const operation = useRef("update");
+
+  function handleUpdate(text: string, status: StatusEnum) {
+    setDialogText(text);
+    setIsOpenDialog(true);
+    statusRegistration.current = status;
+    operation.current = "update";
+  }
+
+  function closeDialog() {
+    setIsOpenDialog(false)
+  }
+
+  async function handleConfirmDialog() {
+    if(idRegistration.current) {
+      if(operation.current === "delete") {
+        await deleteRegistration(idRegistration.current)
+      } else {
+        await updateRegistrationStatus(idRegistration.current, data, statusRegistration.current);
+      }
+      closeDialog();
+    }
+  }
+
+  function handleDelete() {
+    setDialogText("Tem certeza que deseja excluir este candidato?");
+    setIsOpenDialog(true);
+    operation.current = "delete";
+  }
 
   return (
-    <S.Card>
-      <S.IconAndText>
-        <HiOutlineUser />
-        <h3>{data.employeeName}</h3>
-      </S.IconAndText>
-      <S.IconAndText>
-        <HiOutlineMail />
-        <p>{data.email}</p>
-      </S.IconAndText>
-      <S.IconAndText>
-        <HiOutlineCalendar />
-        <span>{data.admissionDate}</span>
-      </S.IconAndText>
-      <S.Actions>
-        <S.Buttons>
-          {collumStatus === StatusEnum.REVIEW && (
-            <>
-              <ButtonSmall bgcolor="rgb(255, 145, 154)" >Reprovar</ButtonSmall>
-              <ButtonSmall bgcolor="rgb(155, 229, 155)">Aprovar</ButtonSmall>
-            </>
-          )}
+    <>
+      <Dialog isOpen={isOpenDialog} onClose={closeDialog} onConfirm={handleConfirmDialog} text={dialogText} />
+      <S.Card>
+        <S.IconAndText>
+          <HiOutlineUser />
+          <h3>{data.employeeName}</h3>
+        </S.IconAndText>
+        <S.IconAndText>
+          <HiOutlineMail />
+          <p>{data.email}</p>
+        </S.IconAndText>
+        <S.IconAndText>
+          <HiOutlineCalendar />
+          <span>{data.admissionDate}</span>
+        </S.IconAndText>
+        <S.Actions>
+          <S.Buttons>
+            {
+            collumStatus === StatusEnum.REVIEW && (
+              <>
+                <ButtonSmall bgcolor="rgb(255, 145, 154)" onClick={() => handleUpdate("Tem certeza que gostaria de Reprovar este candidato?", StatusEnum.REPROVED)}>Reprovar</ButtonSmall>
+                <ButtonSmall bgcolor="rgb(155, 229, 155)" onClick={() => handleUpdate("Tem certeza que gostaria de Aprovar este candidato?", StatusEnum.APPROVED)}>Aprovar</ButtonSmall>
+              </>
+            )}
 
-          {collumStatus !== StatusEnum.REVIEW && (
-            <ButtonSmall bgcolor="#ff8858">Revisar novamente</ButtonSmall>
-          )}
-        </S.Buttons>
-        <HiOutlineTrash />
-      </S.Actions>
-    </S.Card>
+            {collumStatus !== StatusEnum.REVIEW && (
+              <ButtonSmall bgcolor="#ff8858" onClick={() => handleUpdate("Tem certeza que gostaria de Revisar novamente este candidato?", StatusEnum.REVIEW)}>Revisar novamente</ButtonSmall>
+            )}
+          </S.Buttons>
+          <HiOutlineTrash onClick={handleDelete} />
+        </S.Actions>
+      </S.Card>
+    </>
   );
 };
 

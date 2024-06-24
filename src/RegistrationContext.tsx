@@ -11,6 +11,7 @@ interface RegistrationContextType {
   addRegistration: (newRegistration: RegistrationType) => Promise<void>;
   updateRegistrationStatus: (
     id: string,
+    data: RegistrationType,
     status: StatusEnum
   ) => Promise<void>;
   deleteRegistration: (id: string) => Promise<void>;
@@ -37,16 +38,19 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
+      setIsLoading(true);        
       try {
         const response = await api.get("/registrations");
-        setRegistrations(response.data);
+        setRegistrations(response.data);        
       } catch (err) {
         if(err instanceof Error) {
           setError(err);
         }
       } finally {
-        setIsLoading(false);
+        setTimeout(() => {
+          console.log("Simulando demora no carregamento...");      
+          setIsLoading(false);        
+        }, 2000);
       }
     };
     fetchData();
@@ -58,6 +62,7 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
       admissionDate: new Date(), 
       status: StatusEnum.REVIEW       
     }
+    setIsLoading(true);
     try {
       const response = await api.post("/registrations", parsedRegistration);
       setRegistrations([
@@ -68,37 +73,58 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
       if(err instanceof Error) {
         setError(err);
       }
+    } finally {
+      setTimeout(() => {
+        console.log("Simulando demora no carregamento...");      
+        setIsLoading(false);        
+      }, 800);     
     }
   };
 
   const updateRegistrationStatus = async (
     id: string,
+    registration: RegistrationType,
     status: StatusEnum
   ) => {
+    setIsLoading(true);
     try {
-      await api.put(`/registrations/${id}`, { status });
+      await api.put(`/registrations/${id}`, { ...registration, status });
       setRegistrations((prevRegistrations) =>
-        prevRegistrations.map((registration) =>
-          registration.id === id
-            ? { ...registration, status }
-            : registration
+        prevRegistrations.map((item) =>
+          item.id === id
+            ? { ...item, status }
+            : item
         )
       );
     } catch (err) {
       if(err instanceof Error) {
         setError(err);
       }
+    } finally {
+      setTimeout(() => {
+        console.log("Simulando demora no carregamento...");      
+        setIsLoading(false);        
+      }, 800);     
     }
   };
 
   const deleteRegistration = async (id: string) => {
-    try {
+    setIsLoading(true);
+    try {      
       await api.delete(`/registrations/${id}`);
       setRegistrations((prevRegistrations) =>
         prevRegistrations.filter((registration) => registration.id !== id)
       );
+      
     } catch (err) {
-      setError(err);
+      if(err instanceof Error) {
+        setError(err);
+      }
+    } finally {
+      setTimeout(() => {
+        console.log("Simulando demora no carregamento...");      
+        setIsLoading(false);        
+      }, 800);     
     }
   };
 

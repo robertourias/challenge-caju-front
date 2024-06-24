@@ -2,9 +2,7 @@ import { HiOutlineArrowLeft } from "react-icons/hi";
 import { useHistory } from "react-router-dom";
 
 import routes from "~/router/routes";
-import TextField from "~/components/TextField";
-import Button from "~/components/Buttons";
-import { IconButton } from "~/components/Buttons/IconButton";
+import { Button, IconButton, TextField } from "~/components";
 
 import * as S from "./styles";
 

@@ -15,7 +15,7 @@ export const Layer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #0009;
+  background-color: #0007;
   display: flex;
   justifyContent: "center",
   alignItems: "center"
