@@ -1,7 +1,6 @@
 const routes = {
-  identify: "/identify",
   dashboard: "/dashboard",
-  history: "/history",
+  // history: "/hisstory",
   newUser: "/new-user"
 };
 
