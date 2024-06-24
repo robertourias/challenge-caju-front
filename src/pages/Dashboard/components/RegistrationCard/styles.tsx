@@ -33,3 +33,7 @@ export const Actions = styled.div`
     cursor: pointer;
   }
 `;
+
+export const Buttons = styled(IconAndText)`
+  margin-top: 8px;
+`;

@@ -16,6 +16,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@mui/system": "^5.15.20",
     "json-server": "^1.0.0-beta.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -24,6 +26,7 @@
     "styled-components": "^6.1.11"
   },
   "devDependencies": {
+    "@mui/material": "^5.15.20",
     "@nabla/vite-plugin-eslint": "^2.0.4",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "13.0.0",

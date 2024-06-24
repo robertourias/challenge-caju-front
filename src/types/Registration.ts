@@ -13,10 +13,10 @@ import { StatusEnum } from "./Status";
 // export type RegistrationType = schema.infer<typeof RegistrationSchema>;
 
 export type RegistrationType = {
-  id: string,
-  admissionDate: string,
+  id?: string,
+  admissionDate?: string,
+  status?: StatusEnum,
   email: string,
   employeeName: string,
-  status: StatusEnum,
   cpf: string,
 }

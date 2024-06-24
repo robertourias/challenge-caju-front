@@ -1,13 +1,16 @@
+import { useRegistrationContext } from "~/RegistrationContext";
 import Collumns from "./components/Columns";
-import * as S from "./styles";
 import { SearchBar } from "./components/Searchbar";
-import useFetchRegistration from "~/hooks/useFetchRegistration";
+import { Loading } from "~/components/Loading";
+
+import * as S from "./styles";
 
 const DashboardPage = () => {
-  const { registrations } = useFetchRegistration();
+  const { registrations, isLoading } = useRegistrationContext();
 
   return (
     <S.Container>
+      <Loading isVisible={isLoading}/>
       <SearchBar />
       <Collumns registrations={registrations} />
     </S.Container>

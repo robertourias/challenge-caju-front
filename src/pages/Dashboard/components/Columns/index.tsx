@@ -1,8 +1,8 @@
 
 import * as S from "./styles";
 import RegistrationCard from "../RegistrationCard";
-import { StatusEnum } from "~/@types/Status";
-import { RegistrationType } from "~/@types/Registration";
+import { StatusEnum } from "~/types/Status";
+import { RegistrationType } from "~/types/Registration";
 
 const allColumns = [
   { status: StatusEnum.REVIEW, title: "Pronto para revisar" },
@@ -29,6 +29,7 @@ const Collumns = ({registrations}: RegistrationProps) => {
                   return (
                     <RegistrationCard
                       data={registration}
+                      collumStatus={collum.status}
                       key={registration.id}
                     />
                   );

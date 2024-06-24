@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StatusEnum } from "~/@types/Status";
+import { StatusEnum } from "~/types/Status";
 
 export const useStatus = (initialStatus: StatusEnum) => {
   const [status, setStatus] = useState(initialStatus);

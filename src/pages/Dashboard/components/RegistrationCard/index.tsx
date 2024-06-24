@@ -6,31 +6,44 @@ import {
   HiOutlineCalendar,
   HiOutlineTrash,
 } from "react-icons/hi";
+import { StatusEnum } from "~/types/Status";
+import { useRegistrationContext } from "~/RegistrationContext";
 
-type Props = {
+type RegistrationCardProps = {
   data: any;
+  collumStatus: StatusEnum
 };
 
-const RegistrationCard = (props: Props) => {
+const RegistrationCard = ({ data, collumStatus }: RegistrationCardProps) => {
+  const { registrations } = useRegistrationContext();
+
   return (
     <S.Card>
       <S.IconAndText>
         <HiOutlineUser />
-        <h3>{props.data.employeeName}</h3>
+        <h3>{data.employeeName}</h3>
       </S.IconAndText>
       <S.IconAndText>
         <HiOutlineMail />
-        <p>{props.data.email}</p>
+        <p>{data.email}</p>
       </S.IconAndText>
       <S.IconAndText>
         <HiOutlineCalendar />
-        <span>{props.data.admissionDate}</span>
+        <span>{data.admissionDate}</span>
       </S.IconAndText>
       <S.Actions>
-        <ButtonSmall bgcolor="rgb(255, 145, 154)" >Reprovar</ButtonSmall>
-        <ButtonSmall bgcolor="rgb(155, 229, 155)">Aprovar</ButtonSmall>
-        <ButtonSmall bgcolor="#ff8858">Revisar novamente</ButtonSmall>
+        <S.Buttons>
+          {collumStatus === StatusEnum.REVIEW && (
+            <>
+              <ButtonSmall bgcolor="rgb(255, 145, 154)" >Reprovar</ButtonSmall>
+              <ButtonSmall bgcolor="rgb(155, 229, 155)">Aprovar</ButtonSmall>
+            </>
+          )}
 
+          {collumStatus !== StatusEnum.REVIEW && (
+            <ButtonSmall bgcolor="#ff8858">Revisar novamente</ButtonSmall>
+          )}
+        </S.Buttons>
         <HiOutlineTrash />
       </S.Actions>
     </S.Card>
