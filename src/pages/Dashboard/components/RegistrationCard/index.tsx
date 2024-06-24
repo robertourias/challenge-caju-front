@@ -1,5 +1,7 @@
-import { ButtonSmall, Dialog } from "~/components";
-import * as S from "./styles";
+import { useRef, useState } from "react";
+
+import { useRegistrationContext } from "~/RegistrationContext";
+import { ButtonSmall, Dialog, Notification } from "~/components";
 import {
   HiOutlineMail,
   HiOutlineUser,
@@ -7,9 +9,10 @@ import {
   HiOutlineTrash,
 } from "react-icons/hi";
 import { StatusEnum } from "~/types/Status";
-import { useRegistrationContext } from "~/RegistrationContext";
-import { useRef, useState } from "react";
 import { RegistrationType } from "~/types/Registration";
+
+import * as S from "./styles";
+import { Link } from "react-router-dom";
 
 type RegistrationCardProps = {
   data: RegistrationType;
@@ -23,7 +26,7 @@ const RegistrationCard = ({ data, collumStatus }: RegistrationCardProps) => {
   const idRegistration = useRef(data.id);
   const statusRegistration = useRef(StatusEnum.REVIEW);
   const operation = useRef("update");
-
+ 
   function handleUpdate(text: string, status: StatusEnum) {
     setDialogText(text);
     setIsOpenDialog(true);
@@ -38,7 +41,7 @@ const RegistrationCard = ({ data, collumStatus }: RegistrationCardProps) => {
   async function handleConfirmDialog() {
     if(idRegistration.current) {
       if(operation.current === "delete") {
-        await deleteRegistration(idRegistration.current)
+        await deleteRegistration(idRegistration.current);
       } else {
         await updateRegistrationStatus(idRegistration.current, data, statusRegistration.current);
       }
@@ -82,7 +85,8 @@ const RegistrationCard = ({ data, collumStatus }: RegistrationCardProps) => {
               <ButtonSmall bgcolor="#ff8858" onClick={() => handleUpdate("Tem certeza que gostaria de Revisar novamente este candidato?", StatusEnum.REVIEW)}>Revisar novamente</ButtonSmall>
             )}
           </S.Buttons>
-          <HiOutlineTrash onClick={handleDelete} />
+          
+          <HiOutlineTrash onClick={handleDelete} />          
         </S.Actions>
       </S.Card>
     </>

@@ -1,7 +1,7 @@
 import { useRegistrationContext } from "~/RegistrationContext";
 import Collumns from "./components/Columns";
 import { SearchBar } from "./components/Searchbar";
-import { Loading } from "~/components/Loading";
+import { Loading } from "~/components";
 
 import * as S from "./styles";
 

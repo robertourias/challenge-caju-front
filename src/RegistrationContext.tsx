@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
+import { Notification } from "./components";
+
 import { RegistrationType } from "./types/Registration";
 import { StatusEnum } from "./types/Status";
 import { api, formatDate } from "./utils";
@@ -35,6 +37,11 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
   const [registrations, setRegistrations] = useState<RegistrationType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(Error || null);
+  const [notification, setNotification] = useState({
+    isOpen: false,
+    message: "",
+    isError: false,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,10 +75,12 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
       setRegistrations([
         ...registrations,
         { ...response.data, admissionDate: formatDate(response.data.admissionDate) },
-      ]);     
+      ]);    
+      handleNotification("Registro adicionado com sucesso!", false);
     } catch (err) {
       if(err instanceof Error) {
         setError(err);
+        handleNotification(`Erro ao atualizar registro! ${err}`, true);
       }
     } finally {
       setTimeout(() => {
@@ -80,6 +89,31 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
       }, 800);     
     }
   };
+
+  const handleNotification = (message: string, isError: boolean) => {
+    console.log({
+      ...notification,
+      isOpen: true,
+      message,
+      isError
+    })
+    setNotification(() => {
+      return {
+        ...notification,
+        isOpen: true,
+        message,
+        isError
+      }
+    })
+
+    setTimeout(() => {
+      closeNotification();
+    }, 1600);
+  }
+
+  const closeNotification = () => {
+    setNotification({...notification,isOpen: false});
+  }
 
   const updateRegistrationStatus = async (
     id: string,
@@ -96,14 +130,16 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
             : item
         )
       );
+      handleNotification("Status atualizado com sucesso!", false);
     } catch (err) {
       if(err instanceof Error) {
         setError(err);
+        handleNotification(`Erro ao atualizar registro! ${err}`, true);
       }
     } finally {
       setTimeout(() => {
         console.log("Simulando demora no carregamento...");      
-        setIsLoading(false);        
+        setIsLoading(false);
       }, 800);     
     }
   };
@@ -115,10 +151,12 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
       setRegistrations((prevRegistrations) =>
         prevRegistrations.filter((registration) => registration.id !== id)
       );
+      handleNotification("Registro excluído com sucesso!", false);
       
     } catch (err) {
       if(err instanceof Error) {
         setError(err);
+        handleNotification(`Erro ao atualizar registro! ${err}`, true);
       }
     } finally {
       setTimeout(() => {
@@ -140,6 +178,7 @@ const RegistrationProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <RegistrationContext.Provider value={contextValue}>
       {children}
+      <Notification isOpen={notification.isOpen} isError={notification.isError} message={notification.message} onClose={closeNotification} />
     </RegistrationContext.Provider>
   );
 };
