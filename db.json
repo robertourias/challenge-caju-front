@@ -1,14 +1,6 @@
 {
   "registrations": [
     {
-      "admissionDate": "22/10/2023",
-      "email": "luiz@caju.com.br",
-      "employeeName": "Luiz Filho",
-      "status": "APPROVED",
-      "cpf": "56642105087",
-      "id": "3"
-    },
-    {
       "id": "1",
       "admissionDate": "22/10/2023",
       "email": "filipe@caju.com.br",
@@ -21,7 +13,7 @@
       "admissionDate": "22/10/2023",
       "email": "jose@caju.com.br",
       "employeeName": "José Leão",
-      "status": "REPROVED",
+      "status": "REVIEW",
       "cpf": "78502270001"
     },
     {
@@ -31,6 +23,22 @@
       "status": "APPROVED",
       "cpf": "35704637884",
       "id": "e27a"
+    },
+    {
+      "id": "eb50",
+      "employeeName": "Robert Nicoletti",
+      "email": "roberto.urias@gmail.com",
+      "cpf": "357.046.378-84",
+      "admissionDate": "03/07/2024",
+      "status": "APPROVED"
+    },
+    {
+      "id": "e9c7",
+      "employeeName": "Roberto Miyazaki Urias Nicoletti",
+      "email": "roberto.urias@gmail.com",
+      "cpf": "456.456.456-42",
+      "admissionDate": "2024-07-03T20:24:30.736Z",
+      "status": "REVIEW"
     }
   ]
 }
